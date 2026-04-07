@@ -4,7 +4,7 @@ on:
   push:
     branches: [ "**" ]
   pull_request:
-    branches: [ main ]
+    branches: [ mongodb ]
 
 jobs:
   static-analysis:
@@ -39,6 +39,8 @@ jobs:
           cache: maven
 
       - name: Build and run tests with coverage
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
         run: mvn clean package --no-transfer-progress
         working-directory: fashion-app-mongodb
 
@@ -47,12 +49,7 @@ jobs:
         with:
           name: jacoco-report
           path: fashion-app-mongodb/target/site/jacoco/
-<<<<<<< HEAD
-      - name: Build project
-        env:
-          MONGO_URI: ${{ secrets.MONGO_URI }}
-        run: mvn -B package ...
-=======
+
       - name: Print coverage summary
         if: always()
         shell: bash
@@ -76,4 +73,3 @@ jobs:
             echo "Covered lines: ${COVERED}"
             echo "Missed lines: ${MISSED}"
           } >> "$GITHUB_STEP_SUMMARY"
->>>>>>> bab71e8f75d7f8dd250cfddff3e733be6f58f88f
