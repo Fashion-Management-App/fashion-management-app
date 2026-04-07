@@ -47,3 +47,33 @@ jobs:
         with:
           name: jacoco-report
           path: fashion-app-mongodb/target/site/jacoco/
+<<<<<<< HEAD
+      - name: Build project
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+        run: mvn -B package ...
+=======
+      - name: Print coverage summary
+        if: always()
+        shell: bash
+        run: |
+          CSV_FILE="fashion-app-mongodb/target/site/jacoco/jacoco.csv"
+          if [ ! -f "$CSV_FILE" ]; then
+            echo "Coverage report was not generated."
+            exit 0
+          fi
+          read -r COVERED MISSED < <(awk -F, 'NR>1 {covered+=$9; missed+=$8} END {print covered+0, missed+0}' "$CSV_FILE")
+          TOTAL=$((COVERED + MISSED))
+          if [ "$TOTAL" -eq 0 ]; then
+            PERCENT="0.00"
+          else
+            PERCENT=$(awk -v c="$COVERED" -v t="$TOTAL" 'BEGIN {printf "%.2f", (c/t)*100}')
+          fi
+          echo "Line coverage: ${PERCENT}%"
+          {
+            echo "## Coverage"
+            echo "Line coverage: ${PERCENT}%"
+            echo "Covered lines: ${COVERED}"
+            echo "Missed lines: ${MISSED}"
+          } >> "$GITHUB_STEP_SUMMARY"
+>>>>>>> bab71e8f75d7f8dd250cfddff3e733be6f58f88f
