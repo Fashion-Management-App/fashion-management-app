@@ -15,7 +15,7 @@ import java.util.Scanner;
 public class FashionApplication implements CommandLineRunner {
 
     @Autowired
-    private FashionRepository fashionRepository;
+    FashionRepository fashionRepository;
 
     public static void main(String[] args) {
         SpringApplication.run(FashionApplication.class, args);
@@ -57,7 +57,7 @@ public class FashionApplication implements CommandLineRunner {
     }
 
 
-    private void importFashionFromCsv() {
+    void importFashionFromCsv() {
         try (CSVReader reader = new CSVReader(
                 new InputStreamReader(getClass().getClassLoader().getResourceAsStream("fashion.csv"), "UTF-8")
         )) {
@@ -93,7 +93,7 @@ public class FashionApplication implements CommandLineRunner {
     }
 
 
-    private void viewAllFittings() {
+   void viewAllFittings() {
         List<Fashion> list = fashionRepository.findAll();
 
         if (list.isEmpty()) {
@@ -106,7 +106,7 @@ public class FashionApplication implements CommandLineRunner {
     }
 
 
-    private void deleteAllFittings() {
+    void deleteAllFittings() {
         fashionRepository.deleteAll();
         System.out.println("Усі примірки успішно видалено.");
     }
