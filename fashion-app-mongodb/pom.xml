@@ -2,11 +2,11 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.college</groupId>
-  <artifactId>college-schedule</artifactId>
+  <groupId>com.fashion</groupId>
+  <artifactId>fashion-management-app</artifactId>
   <packaging>jar</packaging>
   <version>0.2.0-SNAPSHOT</version>
-  <name>college-sample</name>
+  <name>Fashion Management Application</name>
   <url>http://maven.apache.org</url>
 
   <properties>
@@ -73,7 +73,7 @@
         <artifactId>exec-maven-plugin</artifactId>
         <version>3.5.0</version>
         <configuration>
-          <mainClass>com.college.CollegeApplication</mainClass>
+          <mainClass>com.fashion.FashionApplication</mainClass>
         </configuration>
       </plugin>
 
