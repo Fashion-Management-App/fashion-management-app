@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Fashion Management</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1 { color: #333; }
+        table { border-collapse: collapse; width: 100%; font-size: 13px; }
+        th, td { border: 1px solid #ccc; padding: 8px 10px; text-align: left; }
+        th { background-color: #4a4a4a; color: white; }
+        tr:nth-child(even) { background-color: #f5f5f5; }
+        .btn-add { display: inline-block; margin-bottom: 16px; padding: 8px 16px;
+                   background-color: #2a7ae2; color: white; text-decoration: none;
+                   border-radius: 4px; }
+        .btn-add:hover { background-color: #1a5abf; }
+        .btn-delete { background-color: #e74c3c; color: white; border: none;
+                      padding: 5px 10px; cursor: pointer; border-radius: 3px; }
+        .btn-delete:hover { background-color: #c0392b; }
+    </style>
+</head>
+<body>
+
+<h1>Fashion Management</h1>
+
+<a class="btn-add" href="/add">+ Add Record</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>Customer</th>
+            <th>Couturier</th>
+            <th>Fitting Date</th>
+            <th>Item Model</th>
+            <th>Sizes</th>
+            <th>Fabrics</th>
+            <th>Customer Level</th>
+            <th>Couturier Experience</th>
+            <th>Atelier Address</th>
+            <th>Atelier Phone</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="fashion : ${fashions}">
+            <td th:text="${fashion.customer}"></td>
+            <td th:text="${fashion.couturier}"></td>
+            <td th:text="${fashion.fittingDate}"></td>
+            <td th:text="${fashion.itemModel}"></td>
+            <td th:text="${fashion.sizes}"></td>
+            <td th:text="${fashion.fabrics}"></td>
+            <td th:text="${fashion.customerLevel}"></td>
+            <td th:text="${fashion.couturierExperience}"></td>
+            <td th:text="${fashion.atelierAddress}"></td>
+            <td th:text="${fashion.atelierPhone}"></td>
+            <td>
+                <form th:action="@{/delete/{id}(id=${fashion.id})}" method="post">
+                    <button class="btn-delete" type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

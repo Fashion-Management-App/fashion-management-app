@@ -10,7 +10,6 @@
   <url>http://maven.apache.org</url>
 
   <properties>
-    <!-- Build / resources encoding -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.source>17</maven.compiler.source>
@@ -18,34 +17,67 @@
   </properties>
 
   <dependencies>
-    <!-- Test framework: JUnit 5, Mockito, Spring Test, AssertJ, etc. -->
+    <!-- Spring Boot Web (embedded Tomcat) -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-test</artifactId>
+      <artifactId>spring-boot-starter-web</artifactId>
       <version>2.5.4</version>
-      <scope>test</scope>
     </dependency>
+
+    <!-- Thymeleaf template engine -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-thymeleaf</artifactId>
+      <version>2.5.4</version>
+    </dependency>
+
+    <!-- MongoDB -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-mongodb</artifactId>
       <version>2.5.4</version>
     </dependency>
+
+    <!-- Spring Boot base -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter</artifactId>
       <version>2.5.4</version>
     </dependency>
+
+    <!-- CSV import -->
     <dependency>
       <groupId>com.opencsv</groupId>
       <artifactId>opencsv</artifactId>
       <version>5.5.2</version>
     </dependency>
 
+    <!-- Testing -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <version>2.5.4</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
     <plugins>
-      <!-- Static analysis. Fails the build when style violations are found. -->
+      <!-- Spring Boot executable jar -->
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>2.5.4</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Static analysis -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
@@ -67,16 +99,6 @@
         </executions>
       </plugin>
 
-      <!-- Allows running the CLI app from Maven: `mvn exec:java` -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>3.5.0</version>
-        <configuration>
-          <mainClass>com.fashion.FashionApplication</mainClass>
-        </configuration>
-      </plugin>
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -86,7 +108,7 @@
         </configuration>
       </plugin>
 
-      <!-- Collects test coverage and writes JaCoCo reports under target/site/jacoco -->
+      <!-- Test coverage -->
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>

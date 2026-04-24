@@ -1,9 +1,6 @@
-
+package com.fashion;
 
 import org.junit.jupiter.api.Test;
-
-import com.fashion.Fashion;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class FashionTest {
