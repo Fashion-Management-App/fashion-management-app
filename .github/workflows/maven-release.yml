@@ -39,17 +39,18 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Run Maven Release Prepare
+      - name: Run Maven Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MONGO_URI: ${{ secrets.MONGO_URI }}
         run: |
-          mvn release:prepare \
+          mvn release:prepare release:perform \
             --no-transfer-progress \
+            -s ~/.m2/settings.xml \
             -DreleaseVersion=${{ github.event.inputs.releaseVersion }} \
             -DdevelopmentVersion=${{ github.event.inputs.developmentVersion }} \
             -DscmCommentPrefix="[release] " \
-            -Darguments="-DskipTests"
+            -Darguments="-DskipTests -s ${HOME}/.m2/settings.xml"
         working-directory: fashion-app-mongodb
 
       - name: Checkout release tag
