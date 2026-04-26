@@ -39,6 +39,23 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+      - name: Create Maven settings.xml
+        env:
+          RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        run: |
+          mkdir -p ~/.m2
+          cat > ~/.m2/settings.xml << 'EOF'
+          <settings>
+            <servers>
+              <server>
+                <id>github</id>
+                <username>${env.GITHUB_ACTOR}</username>
+                <password>${env.RELEASE_TOKEN}</password>
+              </server>
+            </servers>
+          </settings>
+          EOF
+
       - name: Run Maven Release
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
@@ -50,7 +67,7 @@ jobs:
             -DreleaseVersion=${{ github.event.inputs.releaseVersion }} \
             -DdevelopmentVersion=${{ github.event.inputs.developmentVersion }} \
             -DscmCommentPrefix="[release] " \
-            -Darguments="-DskipTests -Denv.GITHUB_TOKEN=${{ secrets.RELEASE_TOKEN }}"
+            -Darguments="-DskipTests"
         working-directory: fashion-app-mongodb
 
       - name: Generate Release Notes
