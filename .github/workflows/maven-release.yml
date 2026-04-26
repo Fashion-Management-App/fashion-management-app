@@ -50,7 +50,7 @@ jobs:
             -DreleaseVersion=${{ github.event.inputs.releaseVersion }} \
             -DdevelopmentVersion=${{ github.event.inputs.developmentVersion }} \
             -DscmCommentPrefix="[release] " \
-            -Darguments="-DskipTests"
+            -Darguments="-DskipTests -Denv.GITHUB_TOKEN=${{ secrets.RELEASE_TOKEN }}"
         working-directory: fashion-app-mongodb
 
       - name: Generate Release Notes
