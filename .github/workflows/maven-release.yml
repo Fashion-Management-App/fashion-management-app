@@ -43,6 +43,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
           MONGO_URI: ${{ secrets.MONGO_URI }}
+          RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         run: |
           mvn release:prepare release:perform \
             --no-transfer-progress \
