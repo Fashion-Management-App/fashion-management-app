@@ -2,9 +2,9 @@ name: Publish to GitHub Packages
 
 on:
   push:
-    branches: [ main ]
+    branches: [ mongodb ]
   pull_request:
-    branches: [ main ]
+    branches: [ mongodb ]
 
 jobs:
   build:
