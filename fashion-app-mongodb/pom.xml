@@ -189,6 +189,7 @@
           <tagNameFormat>@{project.version}</tagNameFormat>
           <autoVersionSubmodules>true</autoVersionSubmodules>
           <goals>deploy</goals>
+          <arguments>-DskipTests -s ${session.request.globalSettingsFile}</arguments>
         </configuration>
       </plugin>
     </plugins>
