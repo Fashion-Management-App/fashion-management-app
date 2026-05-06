@@ -21,7 +21,7 @@ jobs:
         working-directory: fashion-app-mongodb
 
   build:
-    name: Build and Unit Tests
+    name: Build
     runs-on: ubuntu-latest
     needs: static-analysis
     steps:
