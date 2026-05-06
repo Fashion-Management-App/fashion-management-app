@@ -4,6 +4,9 @@ on:
     branches: [ "**" ]
   pull_request:
     branches: [ main, mongodb ]
+permissions:
+  contents: read
+  packages: write
 jobs:
   static-analysis:
     name: Static Analysis
@@ -21,7 +24,7 @@ jobs:
         working-directory: fashion-app-mongodb
 
   build:
-    name: Build and Unit Tests
+    name: Build
     runs-on: ubuntu-latest
     needs: static-analysis
     steps:
@@ -87,3 +90,7 @@ jobs:
         with:
           name: failsafe-reports
           path: fashion-app-mongodb/target/failsafe-reports/
+
+  docker:
+    needs: build
+    uses: ./.github/workflows/docker-publish.yml
