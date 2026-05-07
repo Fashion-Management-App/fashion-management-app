@@ -5,7 +5,7 @@ WORKDIR /app
 COPY pom.xml .
 COPY checkstyle.xml .
 
-RUN mvn -B -q -e -DskipTests dependency:go-offline
+RUN mvn -B -q -e -DskipTests org.apache.maven.plugins:maven-dependency-plugin:3.6.1:go-offline
 
 COPY src ./src
 
