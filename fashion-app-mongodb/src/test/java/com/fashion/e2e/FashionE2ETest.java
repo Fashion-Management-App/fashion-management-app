@@ -59,7 +59,7 @@ public class FashionE2ETest {
     }
 
     @Test
-    void shouldOpenMainSchedulePage() {
+    void shouldOpenMainFashionPage() {
 
         page.navigate(BASE_URL);
 
@@ -76,7 +76,7 @@ public class FashionE2ETest {
     }
 
     @Test
-    void shouldOpenAddSchedulePage() {
+    void shouldOpenAddFashionPage() {
 
         page.navigate(BASE_URL);
 
@@ -96,7 +96,7 @@ public class FashionE2ETest {
     }
 
     @Test
-    void shouldCreateAndDeleteScheduleEntry() {
+    void shouldCreateAndDeleteFashionEntry() {
 
         String customerName = "E2E Test Customer";
 
@@ -149,9 +149,14 @@ public class FashionE2ETest {
                 .containsText(customerName);
 
         page.locator("form:has-text('Delete')")
-                .first()
+                .last()
                 .locator("button")
                 .click();
+
+        page.waitForLoadState();
+        page.waitForTimeout(3000);
+
+        page.reload();
 
         page.waitForLoadState();
         page.waitForTimeout(3000);
