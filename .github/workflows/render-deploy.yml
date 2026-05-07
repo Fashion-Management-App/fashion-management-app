@@ -1,0 +1,100 @@
+name: Deploy to Render
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
+    branches:
+      - main
+
+  workflow_dispatch:
+    inputs:
+      clear_cache:
+        description: "Clear Render build cache"
+        required: false
+        default: "false"
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy to Render
+    runs-on: ubuntu-latest
+
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      (
+        github.event.workflow_run.conclusion == 'success'
+      )
+
+    steps:
+      - name: Validate secrets
+        run: |
+          if [ -z "${{ secrets.RENDER_API_KEY }}" ]; then
+            echo "Missing RENDER_API_KEY"
+            exit 1
+          fi
+
+          if [ -z "${{ secrets.RENDER_SERVICE_ID }}" ]; then
+            echo "Missing RENDER_SERVICE_ID"
+            exit 1
+          fi
+
+      - name: Trigger Render deploy
+        id: deploy
+        run: |
+          if [ "${{ github.event.inputs.clear_cache }}" = "true" ]; then
+            CLEAR_CACHE="clearCache=true"
+          else
+            CLEAR_CACHE="clearCache=false"
+          fi
+
+          RESPONSE=$(curl -s -X POST \
+            "https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys?${CLEAR_CACHE}" \
+            -H "Accept: application/json" \
+            -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}")
+
+          echo "$RESPONSE"
+
+          DEPLOY_ID=$(echo "$RESPONSE" | jq -r '.id')
+
+          if [ "$DEPLOY_ID" = "null" ] || [ -z "$DEPLOY_ID" ]; then
+            echo "Failed to create deploy"
+            exit 1
+          fi
+
+          echo "deploy_id=$DEPLOY_ID" >> $GITHUB_OUTPUT
+
+      - name: Wait for deploy to finish
+        run: |
+          DEPLOY_ID="${{ steps.deploy.outputs.deploy_id }}"
+
+          for i in {1..60}; do
+            RESPONSE=$(curl -s \
+              "https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys/${DEPLOY_ID}" \
+              -H "Accept: application/json" \
+              -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}")
+
+            STATUS=$(echo "$RESPONSE" | jq -r '.status')
+
+            echo "Current status: $STATUS"
+
+            if [ "$STATUS" = "live" ]; then
+              echo "Deployment successful"
+              exit 0
+            fi
+
+            if [ "$STATUS" = "build_failed" ] || \
+               [ "$STATUS" = "update_failed" ] || \
+               [ "$STATUS" = "canceled" ]; then
+              echo "Deployment failed"
+              exit 1
+            fi
+
+            sleep 10
+          done
+
+          echo "Deployment timed out"
+          exit 1
