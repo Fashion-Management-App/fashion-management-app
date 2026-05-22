@@ -14,155 +14,208 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
 
 public class FashionE2ETest {
 
-    private static Playwright playwright;
-    private static Browser browser;
-    private static Page page;
+        private static Playwright playwright;
+        private static Browser browser;
+        private static Page page;
 
-    private static final String BASE_URL =
-            System.getProperty(
-                    "E2E_BASE_URL",
-                    System.getenv("E2E_BASE_URL")
-            );
+        private static final String BASE_URL = System.getProperty(
+                        "E2E_BASE_URL",
+                        System.getenv("E2E_BASE_URL"));
 
-    @BeforeAll
-    static void setup() {
+        @BeforeAll
+        static void setup() {
 
-        Assumptions.assumeTrue(
-                BASE_URL != null && !BASE_URL.isBlank(),
-                "E2E_BASE_URL is not set. Skipping E2E tests."
-        );
+                Assumptions.assumeTrue(
+                                BASE_URL != null && !BASE_URL.isBlank(),
+                                "E2E_BASE_URL is not set. Skipping E2E tests.");
 
-        playwright = Playwright.create();
+                playwright = Playwright.create();
 
-        browser = playwright.chromium().launch(
-                new BrowserType.LaunchOptions()
-                        .setHeadless(true)
-        );
+                browser = playwright.chromium().launch(
+                                new BrowserType.LaunchOptions()
+                                                .setHeadless(true));
 
-        page = browser.newPage();
-    }
-
-    @AfterAll
-    static void tearDown() {
-
-        if (page != null) {
-            page.close();
+                page = browser.newPage();
         }
 
-        if (browser != null) {
-            browser.close();
+        @AfterAll
+        static void tearDown() {
+
+                if (page != null) {
+                        page.close();
+                }
+
+                if (browser != null) {
+                        browser.close();
+                }
+
+                if (playwright != null) {
+                        playwright.close();
+                }
         }
 
-        if (playwright != null) {
-            playwright.close();
+        @Test
+        void shouldOpenMainFashionPage() {
+
+                page.navigate(BASE_URL);
+
+                page.waitForLoadState();
+                page.waitForTimeout(3000);
+
+                assertThat(page).hasTitle("Fashion Management");
+
+                assertThat(page.locator("h1"))
+                                .containsText("Fashion Management");
+
+                assertThat(page.locator(".btn-add"))
+                                .containsText("Add Record");
         }
-    }
 
-    @Test
-    void shouldOpenMainFashionPage() {
+        @Test
+        void shouldOpenAddFashionPage() {
 
-        page.navigate(BASE_URL);
+                page.navigate(BASE_URL);
 
-        page.waitForLoadState();
-        page.waitForTimeout(3000);
+                page.waitForLoadState();
+                page.waitForTimeout(3000);
 
-        assertThat(page).hasTitle("Fashion Management");
+                page.click(".btn-add");
 
-        assertThat(page.locator("h1"))
-                .containsText("Fashion Management");
+                page.waitForLoadState();
+                page.waitForTimeout(2000);
 
-        assertThat(page.locator(".btn-add"))
-                .containsText("Add Record");
-    }
+                assertThat(page.locator("h1"))
+                                .containsText("Add New Record");
 
-    @Test
-    void shouldOpenAddFashionPage() {
+                assertThat(page.locator("button[type='submit']"))
+                                .containsText("Save");
+        }
 
-        page.navigate(BASE_URL);
+        @Test
+        void shouldCreateAndDeleteFashionEntry() {
 
-        page.waitForLoadState();
-        page.waitForTimeout(3000);
+                String customerName = "E2E Test Customer";
 
-        page.click(".btn-add");
+                page.navigate(BASE_URL);
 
-        page.waitForLoadState();
-        page.waitForTimeout(2000);
+                page.waitForLoadState();
+                page.waitForTimeout(3000);
 
-        assertThat(page.locator("h1"))
-                .containsText("Add New Record");
+                page.click(".btn-add");
 
-        assertThat(page.locator("button[type='submit']"))
-                .containsText("Save");
-    }
+                page.waitForLoadState();
+                page.waitForTimeout(2000);
 
-    @Test
-    void shouldCreateAndDeleteFashionEntry() {
+                page.locator("input[name='customer']")
+                                .fill(customerName);
 
-        String customerName = "E2E Test Customer";
+                page.locator("input[name='couturier']")
+                                .fill("Fashion Atelier");
 
-        page.navigate(BASE_URL);
+                page.locator("input[name='fittingDate']")
+                                .fill("2026-05-07");
 
-        page.waitForLoadState();
-        page.waitForTimeout(3000);
+                page.locator("input[name='itemModel']")
+                                .fill("Evening Dress");
 
-        page.click(".btn-add");
+                page.locator("input[name='sizes']")
+                                .fill("M");
 
-        page.waitForLoadState();
-        page.waitForTimeout(2000);
+                page.locator("input[name='fabrics']")
+                                .fill("Silk");
 
-        page.locator("input[name='customer']")
-                .fill(customerName);
+                page.locator("input[name='customerLevel']")
+                                .fill("Gold");
 
-        page.locator("input[name='couturier']")
-                .fill("Fashion Atelier");
+                page.locator("input[name='couturierExperience']")
+                                .fill("10");
 
-        page.locator("input[name='fittingDate']")
-                .fill("2026-05-07");
+                page.locator("input[name='atelierAddress']")
+                                .fill("Kyiv");
 
-        page.locator("input[name='itemModel']")
-                .fill("Evening Dress");
+                page.locator("input[name='atelierPhone']")
+                                .fill("380991112233");
 
-        page.locator("input[name='sizes']")
-                .fill("M");
+                page.click("button[type='submit']");
 
-        page.locator("input[name='fabrics']")
-                .fill("Silk");
+                page.waitForLoadState();
+                page.waitForTimeout(3000);
 
-        page.locator("input[name='customerLevel']")
-                .fill("Gold");
+                assertThat(page.locator("body"))
+                                .containsText(customerName);
 
-        page.locator("input[name='couturierExperience']")
-                .fill("10");
+                page.locator("form:has-text('Delete')")
+                                .last()
+                                .locator("button")
+                                .click();
 
-        page.locator("input[name='atelierAddress']")
-                .fill("Kyiv");
+                page.waitForLoadState();
+                page.waitForTimeout(3000);
 
-        page.locator("input[name='atelierPhone']")
-                .fill("380991112233");
+                page.reload();
 
-        page.click("button[type='submit']");
+                page.waitForLoadState();
+                page.waitForTimeout(3000);
 
-        page.waitForLoadState();
-        page.waitForTimeout(3000);
+                assertThat(page.locator("body"))
+                                .not()
+                                .containsText(customerName);
+        }
 
-        assertThat(page.locator("body"))
-                .containsText(customerName);
+        @Test
+        void shouldEditFashionEntry() {
 
-        page.locator("form:has-text('Delete')")
-                .last()
-                .locator("button")
-                .click();
+                String oldName = "Old Customer";
+                String newName = "Updated Customer";
 
-        page.waitForLoadState();
-        page.waitForTimeout(3000);
+                page.navigate(BASE_URL);
 
-        page.reload();
+                page.waitForLoadState();
+                page.waitForTimeout(3000);
 
-        page.waitForLoadState();
-        page.waitForTimeout(3000);
+                page.click(".btn-add");
 
-        assertThat(page.locator("body"))
-                .not()
-                .containsText(customerName);
-    }
+                page.waitForLoadState();
+                page.waitForTimeout(2000);
+
+                page.locator("input[name='customer']").fill(oldName);
+                page.locator("input[name='couturier']").fill("Fashion Atelier");
+                page.locator("input[name='fittingDate']").fill("2026-05-07");
+                page.locator("input[name='itemModel']").fill("Evening Dress");
+                page.locator("input[name='sizes']").fill("M");
+                page.locator("input[name='fabrics']").fill("Silk");
+                page.locator("input[name='customerLevel']").fill("Gold");
+                page.locator("input[name='couturierExperience']").fill("10");
+                page.locator("input[name='atelierAddress']").fill("Kyiv");
+                page.locator("input[name='atelierPhone']").fill("380991112233");
+
+                page.click("button[type='submit']");
+
+                page.waitForLoadState();
+                page.waitForTimeout(3000);
+
+                assertThat(page.locator("body"))
+                                .containsText(oldName);
+
+                page.locator("tr:has-text('Old Customer')")
+                                .locator("form:has-text('Edit') button")
+                                .click();
+
+                page.waitForLoadState();
+                page.waitForTimeout(2000);
+
+                page.locator("input[name='customer']").fill(newName);
+
+                page.click("button[type='submit']");
+
+                page.waitForLoadState();
+                page.waitForTimeout(3000);
+
+                assertThat(page.locator("body"))
+                                .containsText(newName);
+
+                assertThat(page.locator("body"))
+                                .not()
+                                .containsText(oldName);
+        }
 }
