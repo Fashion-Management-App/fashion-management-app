@@ -33,4 +33,9 @@ public class FashionService {
         List<Fashion> fashions = new CsvImporter().importFromCsv();
         return fashionRepository.saveAll(fashions);
     }
+
+    public Fashion getFittingById(String id) {
+        return fashionRepository.findById(id).orElse(null);
+    }
+
 }

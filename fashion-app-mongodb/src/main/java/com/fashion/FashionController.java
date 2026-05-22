@@ -39,4 +39,19 @@ public class FashionController {
         fashionService.deleteFittingById(id);
         return "redirect:/";
     }
+
+    @GetMapping("/edit/{id}")
+    public String editForm(@PathVariable String id, Model model) {
+        Fashion fashion = fashionService.getFittingById(id);
+        model.addAttribute("fashion", fashion);
+        return "edit";
+    }
+
+    @PostMapping("/edit/{id}")
+    public String editSubmit(@PathVariable String id,
+            @ModelAttribute Fashion fashion) {
+        fashion.setId(id);
+        fashionService.saveFitting(fashion);
+        return "redirect:/";
+    }
 }

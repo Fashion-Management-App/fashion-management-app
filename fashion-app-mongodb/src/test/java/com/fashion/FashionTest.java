@@ -16,8 +16,7 @@ class FashionTest {
                 "VIP",
                 10,
                 "вул. Хрещатик 1, Київ",
-                380991234567L
-        );
+                380991234567L);
     }
 
     @Test
@@ -111,8 +110,7 @@ class FashionTest {
                 "Standard",
                 5,
                 "вул. Саксаганського 5, Київ",
-                380997654321L
-        );
+                380997654321L);
         assertNotEquals(f1.toString(), f2.toString());
     }
 
@@ -121,8 +119,16 @@ class FashionTest {
         Fashion fashion = new Fashion(
                 "Тест", "Тест", "2024-01-01",
                 "Тест", "S", "Тест", "Basic",
-                0, "Тест", 380991111111L
-        );
+                0, "Тест", 380991111111L);
         assertTrue(fashion.toString().contains("0"));
+    }
+
+    @Test
+    void testSetId_updatesId() {
+        Fashion fashion = createSample();
+
+        fashion.setId("test-id");
+
+        assertEquals("test-id", fashion.getId());
     }
 }
