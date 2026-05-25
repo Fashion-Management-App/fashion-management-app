@@ -1,15 +1,8 @@
 name: E2E Tests
 
 on:
-  pull_request:
-    branches:
-      - main
-      - master
-
-  push:
-    branches:
-      - main
-      - master
+  workflow_call:
+  workflow_dispatch:
 
 jobs:
   e2e-tests:
@@ -31,6 +24,8 @@ jobs:
 
       - name: Install Playwright browsers
         run: mvn exec:java -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install chromium"
+        working-directory: fashion-app-mongodb
 
-      - name: Run tests
+      - name: Run E2E tests
         run: mvn test
+        working-directory: fashion-app-mongodb
