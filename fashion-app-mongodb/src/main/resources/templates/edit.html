@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Edit Fashion Record</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 150px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            max-width: 500px;
+        }
+
+        label {
+            display: block;
+            margin-top: 12px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 4px;
+            box-sizing: border-box;
+        }
+
+        .btn-save {
+            margin-top: 20px;
+            padding: 10px 16px;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .btn-save:hover {
+            background-color: #1e8449;
+        }
+
+        .btn-cancel {
+            display: inline-block;
+            margin-left: 10px;
+            padding: 10px 16px;
+            background-color: #7f8c8d;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+
+        .btn-cancel:hover {
+            background-color: #626e70;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Edit Fashion Record</h1>
+
+<form th:action="@{/edit/{id}(id=${fashion.id})}" method="post">
+
+    <label>Customer</label>
+    <input type="text" name="customer" th:value="${fashion.customer}" required>
+
+    <label>Couturier</label>
+    <input type="text" name="couturier" th:value="${fashion.couturier}" required>
+
+    <label>Fitting Date</label>
+    <input type="date" name="fittingDate" th:value="${fashion.fittingDate}" required>
+
+    <label>Item Model</label>
+    <input type="text" name="itemModel" th:value="${fashion.itemModel}" required>
+
+    <label>Sizes</label>
+    <input type="text" name="sizes" th:value="${fashion.sizes}" required>
+
+    <label>Fabrics</label>
+    <input type="text" name="fabrics" th:value="${fashion.fabrics}" required>
+
+    <label>Customer Level</label>
+    <input type="text" name="customerLevel" th:value="${fashion.customerLevel}" required>
+
+    <label>Couturier Experience</label>
+    <input type="number" name="couturierExperience"
+           th:value="${fashion.couturierExperience}" required>
+
+    <label>Atelier Address</label>
+    <input type="text" name="atelierAddress" th:value="${fashion.atelierAddress}" required>
+
+    <label>Atelier Phone</label>
+    <input type="number" name="atelierPhone" th:value="${fashion.atelierPhone}" required>
+
+    <button class="btn-save" type="submit">Save Changes</button>
+
+    <a href="/" class="btn-cancel">Cancel</a>
+
+</form>
+
+</body>
+</html>
