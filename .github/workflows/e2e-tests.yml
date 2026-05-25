@@ -30,8 +30,15 @@ jobs:
           java-version: 17
           cache: maven
 
+      - name: Build project
+        run: mvn clean test-compile --no-transfer-progress
+
       - name: Install Playwright browsers
-        run: mvn exec:java -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install chromium"
+        run: |
+          mvn exec:java \
+            -Dexec.mainClass=com.microsoft.playwright.CLI \
+            -Dexec.classpathScope=test \
+            -Dexec.args="install chromium"
 
       - name: Run E2E tests
-        run: mvn test
+        run: mvn test --no-transfer-progress
