@@ -4,7 +4,8 @@ on:
   push:
     branches: [ "**" ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ "**" ]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -14,6 +15,10 @@ jobs:
   static-analysis:
     name: Static Analysis
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: fashion-app-mongodb
 
     steps:
       - uses: actions/checkout@v4
@@ -27,12 +32,15 @@ jobs:
 
       - name: Run Checkstyle
         run: mvn validate --no-transfer-progress
-        working-directory: fashion-app-mongodb
 
   build:
     name: Build
     runs-on: ubuntu-latest
     needs: static-analysis
+
+    defaults:
+      run:
+        working-directory: fashion-app-mongodb
 
     steps:
       - uses: actions/checkout@v4
@@ -48,7 +56,6 @@ jobs:
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }}
         run: mvn clean package --no-transfer-progress
-        working-directory: fashion-app-mongodb
 
       - name: Upload JaCoCo coverage report
         uses: actions/upload-artifact@v4
