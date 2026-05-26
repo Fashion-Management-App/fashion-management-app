@@ -1,6 +1,7 @@
 name: Deploy to Render
 
 on:
+  workflow_call:
   workflow_run:
     workflows: ["CI"]
     types:
