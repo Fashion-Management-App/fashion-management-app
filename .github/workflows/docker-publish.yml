@@ -1,7 +1,10 @@
 name: Docker Publish
 
 on:
+
   workflow_call:
+
+  workflow_dispatch:
 
 jobs:
   build-and-push:
@@ -39,3 +42,4 @@ jobs:
           context: fashion-app-mongodb
           push: true
           tags: ${{ steps.meta.outputs.tags }}
+
